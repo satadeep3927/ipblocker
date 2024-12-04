@@ -24,7 +24,7 @@ This CLI tool uses configuration files to define its behavior and ensures ease o
 1. Install Rust and Cargo if not already installed. Refer to [Rust's official site](https://www.rust-lang.org/) for installation instructions.
 2. Clone the repository:
    ```bash
-   git clone https://github.com/your-repo/ipblocker.git
+   git clone https://repos.mydevfactory.com/satadeep.dasgupta/ipblocker
    cd ipblocker
    ```
 3. Build the tool:
