@@ -1,0 +1,11 @@
+<Directory /var/www/chhaya.co.in/public_html>
+    Require all granted
+
+    {% for record in records%}
+
+    <If "%{REMOTE_ADDR} == '{{ record.ip }}'">
+        Require all denied # {{ record.reason }}
+    </If>
+
+    {% endfor %}
+</Directory>

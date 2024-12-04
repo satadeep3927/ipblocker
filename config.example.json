@@ -1,0 +1,34 @@
+{
+  "name": "Brainium Staging",
+  "database": "./ipblockerdb.db",
+  "abuseip": {
+    "token": "bdf47c7deffdfa4f3511533a97883f6e6883d4c0d1ea5491283e79b52d26b017b9c1ea954ccb64eb"
+  },
+  "whitelists": [],
+  "server": {
+    "conf": {
+      "location": "./access/{MM}-vhost.conf",
+      "template": "conf.jinja",
+      "reload": "systemctl reload apache2"
+    },
+    "log": {
+      "location": "{YYYYMMDD}-log.txt",
+      "timestamp": "%d/%b/%Y:%H:%M:%S %z"
+    }
+  },
+  "rules": [
+    {
+      "name": "Rate Limiter",
+      "path": "xmlrpc.php",
+      "type": "rate_limit_rule",
+      "requests": 6,
+      "window": 30
+    },
+    {
+      "name": "Abuse Report",
+      "path": "",
+      "type": "abuse_report_rule",
+      "confidence": 40
+    }
+  ]
+}
