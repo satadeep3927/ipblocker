@@ -3,6 +3,8 @@ name = "ipblocker"
 version = "0.1.0"
 edition = "2021"
 authors = ["Satadeep Dasgupta"]
+license = "MIT"
+license-file = "LICENSE"
 
 [dependencies]
 chrono = {version = "0.4.38", features = ["serde"]}
