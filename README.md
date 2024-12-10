@@ -1,8 +1,8 @@
-# IPBlocker CLI
+# IronWatch CLI
 
 ## Overview
 
-**IPBlocker CLI** is a lightweight command-line interface tool designed to help system administrators and developers prevent DDoS attacks by efficiently managing IP blocking and monitoring suspicious activities. It offers straightforward commands to block or unblock IPs, view blocked IP lists, and configure settings, all through a terminal-friendly interface.
+**IronWatch CLI** is a lightweight command-line interface tool designed to help system administrators and developers prevent DDoS attacks by efficiently managing IP blocking and monitoring suspicious activities. It offers straightforward commands to block or unblock IPs, view blocked IP lists, and configure settings, all through a terminal-friendly interface.
 
 This CLI tool uses configuration files to define its behavior and ensures ease of use for professionals who prefer working within a terminal environment. It integrates seamlessly with systems, providing enhanced security with minimal setup.
 
@@ -24,8 +24,8 @@ This CLI tool uses configuration files to define its behavior and ensures ease o
 1. Install Rust and Cargo if not already installed. Refer to [Rust's official site](https://www.rust-lang.org/) for installation instructions.
 2. Clone the repository:
    ```bash
-   git clone https://repos.mydevfactory.com/satadeep.dasgupta/ipblocker
-   cd ipblocker
+   git clone https://repos.mydevfactory.com/satadeep.dasgupta/IronWatch
+   cd IronWatch
    ```
 3. Build the tool:
    ```bash
@@ -33,7 +33,7 @@ This CLI tool uses configuration files to define its behavior and ensures ease o
    ```
 4. Run the executable:
    ```bash
-   ./target/release/ipblocker
+   ./target/release/IronWatch
    ```
 
 ---
@@ -43,7 +43,7 @@ This CLI tool uses configuration files to define its behavior and ensures ease o
 ### Command Structure
 
 ```bash
-ipblocker <COMMAND> [OPTIONS]
+IronWatch <COMMAND> [OPTIONS]
 ```
 
 ### Available Commands
@@ -52,7 +52,7 @@ ipblocker <COMMAND> [OPTIONS]
 Scan and automatically block potentially malicious IP addresses.
 
 ```bash
-ipblocker scanblock --config <path_to_config>
+IronWatch scanblock --config <path_to_config>
 ```
 
 - `--config`: Path to the configuration file (default: `config.json`).
@@ -61,7 +61,7 @@ ipblocker scanblock --config <path_to_config>
 Only scan potentially malicious IP addresses without blocking.
 
 ```bash
-ipblocker scan --config <path_to_config>
+IronWatch scan --config <path_to_config>
 ```
 
 - `--config`: Path to the configuration file (default: `config.json`).
@@ -70,7 +70,7 @@ ipblocker scan --config <path_to_config>
 Manually block a specific IP address.
 
 ```bash
-ipblocker block --config <path_to_config> --ip <ip_address> [--reason <reason>]
+IronWatch block --config <path_to_config> --ip <ip_address> [--reason <reason>]
 ```
 
 - `--config`: Path to the configuration file (default: `config.json`).
@@ -81,7 +81,7 @@ ipblocker block --config <path_to_config> --ip <ip_address> [--reason <reason>]
 View all blocked IP addresses.
 
 ```bash
-ipblocker show --config <path_to_config>
+IronWatch show --config <path_to_config>
 ```
 
 - `--config`: Path to the configuration file (default: `config.json`).
@@ -90,7 +90,7 @@ ipblocker show --config <path_to_config>
 Unblock a specific IP address.
 
 ```bash
-ipblocker unblock --config <path_to_config> --ip <ip_address>
+IronWatch unblock --config <path_to_config> --ip <ip_address>
 ```
 
 - `--config`: Path to the configuration file (default: `config.json`).
@@ -105,7 +105,7 @@ The configuration file (`config.json`) defines how the tool operates. Below is a
 ```json
 {
   "name": "Brainium Staging",
-  "database": "./ipblockerdb.db",
+  "database": "./IronWatchdb.db",
   "abuseip": {
     "token": "bdf47c7deffdfa4f3511533a97883f6e6883d4c0d1ea5491283e79b52d26b017b9c1ea954ccb64eb"
   },
@@ -156,25 +156,25 @@ The configuration file (`config.json`) defines how the tool operates. Below is a
 ### Blocking a Specific IP
 
 ```bash
-ipblocker block --config ./config.json --ip 192.168.1.100 --reason "Suspicious activity detected"
+IronWatch block --config ./config.json --ip 192.168.1.100 --reason "Suspicious activity detected"
 ```
 
 ### Viewing All Blocked IPs
 
 ```bash
-ipblocker show --config ./config.json
+IronWatch show --config ./config.json
 ```
 
 ### Unblocking an IP
 
 ```bash
-ipblocker unblock --config ./config.json --ip 192.168.1.100
+IronWatch unblock --config ./config.json --ip 192.168.1.100
 ```
 
 ### Automated Scan and Block
 
 ```bash
-ipblocker scanblock --config ./config.json
+IronWatch scanblock --config ./config.json
 ```
 
 ---
@@ -191,4 +191,4 @@ Contributions are welcome! Feel free to submit a pull request or open an issue t
 
 ---
 
-With **IPBlocker CLI**, safeguard your servers with efficiency and simplicity. Perfect for developers and administrators committed to maintaining secure and reliable environments.
+With **IronWatch CLI**, safeguard your servers with efficiency and simplicity. Perfect for developers and administrators committed to maintaining secure and reliable environments.

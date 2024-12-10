@@ -1,6 +1,6 @@
 {
   "name": "Brainium Staging",
-  "database": "./ipblockerdb.db",
+  "database": "./ironwatch.db",
   "abuseip": {
     "token": "bdf47c7deffdfa4f3511533a97883f6e6883d4c0d1ea5491283e79b52d26b017b9c1ea954ccb64eb"
   },
