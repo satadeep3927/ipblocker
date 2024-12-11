@@ -47,5 +47,6 @@ pub enum Rule {
         name: String,
         path: String,
         confidence: u32,
+        delta: i64,
     },
 }

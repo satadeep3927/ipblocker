@@ -28,7 +28,8 @@
       "name": "Abuse Report",
       "path": "",
       "type": "abuse_report_rule",
-      "confidence": 40
+      "confidence": 40,
+      "delta": 30
     }
   ]
 }

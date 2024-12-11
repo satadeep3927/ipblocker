@@ -62,9 +62,11 @@ impl Scanner {
                     name,
                     path,
                     confidence,
+                    delta,
                 } => {
                     let abusedb_suspects =
-                        abuse_module::extract_suspects(name, path, confidence, &self.pool).await;
+                        abuse_module::extract_suspects(name, path, confidence, &self.pool, delta, &suspects)
+                            .await;
 
                     suspects.extend(abusedb_suspects);
                 }

@@ -1,21 +1,27 @@
 pub mod types;
 
-use std::collections::HashSet;
+use std::{collections::HashSet, sync::LazyLock};
 
+use super::config;
+use crate::constants::ABUSEDB_URL;
 use chrono::Local;
+use chrono::{DateTime, Duration, Utc};
 use regex::Regex;
 use sqlx::SqlitePool;
 use tokio::fs::read_to_string;
 use types::{AbuseIpResponse, HistoryIP};
 
-use super::config;
-use crate::constants::ABUSEDB_URL;
+static LOG_REGEX: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"(?P<ip>\d{1,3}(?:\.\d{1,3}){3}) - - \[(?P<timestamp>[^\]]+)]").unwrap()
+});
 
 pub async fn extract_suspects(
     name: String,
     path: String,
     confidence: u32,
     pool: &SqlitePool,
+    delta: i64,
+    previous_suspects: &Vec<(String, String)>,
 ) -> Vec<(String, String)> {
     let config = config::get_config().await;
 
@@ -23,20 +29,27 @@ pub async fn extract_suspects(
 
     let mut suspects: Vec<(String, String)> = vec![];
 
-    let history = sqlx::query_as::<_, HistoryIP>("SELECT ip, reason FROM logs")
-        .fetch_all(pool)
-        .await
-        .unwrap_or_default();
     let logfile = resolve_logfile_template(&config.server.log.location);
 
-    let access_records = extract_ip(&logfile, &path).await;
+    let access_records =
+        extract_recent_ips(&logfile, &path, delta, &config.server.log.timestamp).await;
 
     for ip in access_records {
         if whitelists.contains(&ip) {
             continue;
         }
-        if history.iter().any(|h| h.ip == ip) {
-            let h = history.iter().find(|h| h.ip == ip).unwrap();
+
+        if previous_suspects.iter().any(|s| s.0 == ip) {
+            continue;
+        }
+        let history =
+            sqlx::query_as::<_, HistoryIP>("SELECT ip, reason FROM logs WHERE ip = $1 LIMIT 1")
+                .bind(&ip)
+                .fetch_optional(pool)
+                .await
+                .unwrap_or_default();
+
+        if let Some(h) = history {
             suspects.push((ip.clone(), h.reason.clone()));
             continue;
         }
@@ -86,19 +99,31 @@ pub fn resolve_logfile_template(template: &str) -> String {
     filename
 }
 
-pub async fn extract_ip(path: &str, target_route: &str) -> HashSet<String> {
+pub async fn extract_recent_ips(
+    path: &str,
+    target_route: &str,
+    delta: i64,
+    timestamp_fmt: &str,
+) -> HashSet<String> {
     let log = read_to_string(path).await.unwrap_or_default();
-    let log_regex =
-        Regex::new(r"(?P<ip>\d{1,3}(?:\.\d{1,3}){3}) - - \[(?P<timestamp>[^\]]+)]").unwrap();
+
+    let now = Utc::now();
 
     log.lines()
-        .filter(|line| line.contains(&target_route))
+        .filter(|line| line.contains(target_route))
         .filter_map(|line| {
-            if let Some(captures) = log_regex.captures(line) {
-                Some(captures["ip"].to_string())
-            } else {
-                None
+            if let Some(captures) = LOG_REGEX.captures(line) {
+                let ip = captures["ip"].to_string();
+                let timestamp_str = captures["timestamp"].to_string();
+
+                if let Ok(timestamp) = DateTime::parse_from_str(&timestamp_str, timestamp_fmt) {
+                    let timestamp = timestamp.with_timezone(&Utc);
+                    if now - timestamp <= Duration::seconds(delta) {
+                        return Some(ip);
+                    }
+                }
             }
+            None
         })
         .collect()
 }
