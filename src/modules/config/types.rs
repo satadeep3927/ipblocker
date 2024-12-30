@@ -13,7 +13,7 @@ pub struct Config {
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct AbuseIP {
-    pub token: String,
+    pub token: Vec<String>,
 }
 #[derive(Debug, Deserialize, Clone)]
 pub struct Server {

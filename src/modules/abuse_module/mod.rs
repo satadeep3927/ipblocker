@@ -4,6 +4,7 @@ use std::{collections::HashSet, sync::LazyLock};
 
 use super::config;
 use crate::constants::ABUSEDB_URL;
+use crate::helper;
 use chrono::Local;
 use chrono::{DateTime, Duration, Utc};
 use regex::Regex;
@@ -54,7 +55,11 @@ pub async fn extract_suspects(
             continue;
         }
 
-        let abusedb_confidence = get_ip_report(&ip, &config.abuseip.token).await.unwrap_or(0);
+        let token = helper::select_token(config.abuseip.token.clone());
+
+        let abusedb_confidence = get_ip_report(&ip, &token.unwrap_or_default())
+            .await
+            .unwrap_or(0);
 
         if abusedb_confidence < confidence {
             continue;
